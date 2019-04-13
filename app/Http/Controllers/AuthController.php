@@ -8,6 +8,7 @@ use Firebase\JWT\JWT;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User as Model;
+use Rollbar\Rollbar;
 
 class AuthController extends Controller
 {
@@ -73,7 +74,8 @@ class AuthController extends Controller
     }
 
     public function githubCallback(Request $request){
-
+        Rollbar::debug("githubCallback", $request->all());
+        return $this->responseSuccess(true);
     }
 
     /**

@@ -41,7 +41,7 @@ foreach ($envs as $env) {
     //Auth
     $router->group(['prefix' => $env . 'auth'], function () use ($router) {
         $router->post('loginsocial', ['uses' => 'AuthController@loginSocial']);
-        $router->post('githubcallback', ['uses' => 'AuthController@githubCallback']);
+        $router->get('githubcallback', ['uses' => 'AuthController@githubCallback']);
     });
 
     // Timeline
