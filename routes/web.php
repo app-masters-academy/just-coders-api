@@ -35,6 +35,7 @@ foreach ($envs as $env) {
         $router->get('{id:[0-9]+}', ['uses' => 'PostController@read']);
         $router->delete('{id:[0-9]+}', ['uses' => 'PostController@delete']);
         $router->put('{id:[0-9]+}', ['uses' => 'PostController@update']);
+        $router->post('{id:[0-9]+}/like', ['uses' => 'PostController@like']);
     });
 
     //Auth
@@ -42,4 +43,7 @@ foreach ($envs as $env) {
         $router->post('loginsocial', ['uses' => 'AuthController@loginSocial']);
         $router->post('githubcallback', ['uses' => 'AuthController@githubCallback']);
     });
+
+    // Timeline
+    $router->get($env . 'timeline', ['uses' => 'PostController@timeline']);
 }

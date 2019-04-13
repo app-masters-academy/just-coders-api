@@ -4,6 +4,9 @@ namespace App;
 
 use AppMasters\AmLLib\Model\BaseModel;
 
+/**
+ * @property integer likes
+ */
 class Post extends BaseModel
 {
 
@@ -38,6 +41,17 @@ class Post extends BaseModel
             'user_id' => 'required|integer',
             'content' => 'required|string|max:600',
         ];
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function addLike($user)
+    {
+        $this->likes++;
+        $this->update();
     }
 
 }

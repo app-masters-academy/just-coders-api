@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use AppMasters\AmLLib\Controller\Controller;
 use App\Post as Model;
+use AppMasters\AmLLib\Lib\Utils;
 use Illuminate\Http\Request;
 use PHPUnit\Util\Json;
 
@@ -45,7 +46,20 @@ class PostController extends Controller
      **/
     public function list()
     {
-        $data = Model::all()->toArray();
+        $data = Model::with('user')->get()->toArray();
+        return $this->responseData($data);
+    }
+
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function timeline(Request $request)
+    {
+        $data = Model::orderBy('id', 'desc')->with('user')->get()->toArray();
+
+        $data = $this->applyReturnMask($data);
+
         return $this->responseData($data);
     }
 
@@ -58,13 +72,13 @@ class PostController extends Controller
      */
     public function read(Request $request, $id)
     {
-        $entry = Model::find($id);
+        $entry = Model::with('user')->find($id);
 
         if (is_null($entry)) {
             return $this->responseError('NOT_FOUND', 404);
         }
 
-        return $this->responseSingleData($entry);
+        return $this->responseSingleData($this->applyReturnMask($entry->toArray()));
     }
 
     /**
@@ -92,7 +106,7 @@ class PostController extends Controller
         }
 
         $entry->update($request->all());
-        return $this->responseSingleData($entry);
+        return $this->read($request, $id);
     }
 
     /**
@@ -120,5 +134,34 @@ class PostController extends Controller
         } else {
             return $this->responseError('NOT_DELETED', 404);
         }
+    }
+
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Json
+     * @internal param $int
+     */
+    public function like(Request $request, $id)
+    {
+        /** @var Model $entry */
+        $entry = Model::find($id);
+
+        if (is_null($entry)) {
+            return $this->responseError('NOT_FOUND', 404);
+        }
+
+        $entry->addLike($request->auth);
+
+        return $this->read($request, $id);
+    }
+
+    private function applyReturnMask($data)
+    {
+        return Utils::applyMask($data,
+            ['*', 'user' => ['name', 'thumb_url']],
+            ['updated_at']
+        );
+
     }
 }

@@ -124,7 +124,7 @@ class Utils
     {
         $newArray = [];
 
-        $showAll = isset($showMask['*']);
+        $showAll = isset($showMask['*']) || (isset($showMask[0]) && $showMask[0] == "*");
 
         if (isset($showMask))
             $showMask = Utils::combine($showMask);
@@ -161,7 +161,8 @@ class Utils
                     } else if (!$showAll) {
                         unset($newRecord[$attribute]);
                     }
-                } else if (isset($hideMask) && isset($hideMask[$attribute])) {
+                }
+                if (isset($hideMask) && isset($hideMask[$attribute])) {
                     // var_dump("HEE");
                     if (is_array($record[$attribute])) {
                         // var_dump("ARRAY ".$attribute);
