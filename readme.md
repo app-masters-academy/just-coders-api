@@ -30,6 +30,25 @@ POST `http://api.justcoders.appmasters.io/{env}/post` sending just `content` att
 {"content":"I'm happy to be here"} 
 ```
 
+It will return the new created post. 
+
+To retrieve a single post:
+
+GET `http://api.justcoders.appmasters.io/{env}/post/{id}` will return: 
+```
+{
+    "user_id": 2,
+    "content": "I'm happy to be here",
+    "likes": 0,
+    "id": 1,
+    "created_at": "2019-04-13 10:42:46",
+    "user": {
+        "name": "Great Admin",
+        "thumb_url": "http://www.tiago.com/eu.jpg"
+    }
+} 
+```
+
 ### Timeline
 
 GET `http://api.justcoders.appmasters.io/{env}/timeline` will return: 
