@@ -35,9 +35,9 @@ class PostController extends Controller
         if (!$this->validator($request))
             return $this->lastValidatorError();
 
-        $entry = Model::create($request->all())->toArray();
+        $entry = Model::create($request->all());
 
-        return $this->responseSingleData($entry);
+        return $this->read($request, $entry->id);
     }
 
     /**
@@ -72,7 +72,7 @@ class PostController extends Controller
      */
     public function read(Request $request, $id)
     {
-        $entry = Model::with('user')->find($id);
+        $entry = Model::with(['user', 'comments'])->find($id);
 
         if (is_null($entry)) {
             return $this->responseError('NOT_FOUND', 404);
@@ -156,10 +156,33 @@ class PostController extends Controller
         return $this->read($request, $id);
     }
 
+    /**
+     * @param Request $request
+     * @param $id
+     * @return Json
+     * @internal param $int
+     */
+    public function createComment(Request $request, $id)
+    {
+        /** @var Model $entry */
+        $entry = Model::find($id);
+
+        if (is_null($entry)) {
+            return $this->responseError('NOT_FOUND', 404);
+        }
+
+        $entry->addComment($request, $id);
+
+        return $this->read($request, $id);
+    }
+
     private function applyReturnMask($data)
     {
         return Utils::applyMask($data,
-            ['*', 'user' => ['name', 'thumb_url']],
+            ['*',
+                'user' => ['name', 'thumb_url'],
+                'comments' => ['content', 'created_at']
+            ],
             ['updated_at']
         );
 

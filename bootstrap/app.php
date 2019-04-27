@@ -45,6 +45,10 @@ $app->singleton(
 |--------------------------------------------------------------------------
 */
 
+$app->middleware([
+    \Barryvdh\Cors\HandleCors::class,
+]);
+
 $app->routeMiddleware([
     'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
 ]);
@@ -55,6 +59,7 @@ $app->routeMiddleware([
 |--------------------------------------------------------------------------
 */
 
+$app->register(Barryvdh\Cors\ServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
 $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
 
@@ -65,6 +70,7 @@ if (env('ROLLBAR_TOKEN') != null) {
 }
 
 $app->configure('logging');
+$app->configure('cors');
 
 /*
 |--------------------------------------------------------------------------

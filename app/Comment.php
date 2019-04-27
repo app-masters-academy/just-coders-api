@@ -7,7 +7,7 @@ use AppMasters\AmLLib\Model\BaseModel;
 /**
  * @property integer likes
  */
-class Post extends BaseModel
+class Comment extends BaseModel
 {
 
     /**
@@ -16,8 +16,8 @@ class Post extends BaseModel
      */
     protected $fillable = [
         'user_id',
+        'post_id',
         'content',
-        'likes',
     ];
 
     /**
@@ -31,14 +31,11 @@ class Post extends BaseModel
         'updated_at',
     ];
 
-    protected $attributes = [
-        'likes' => 0
-    ];
-
     public function rules($data)
     {
         return [
             'user_id' => 'required|integer',
+            'post_id' => 'required|integer',
             'content' => 'required|string|max:600',
         ];
     }
@@ -48,30 +45,9 @@ class Post extends BaseModel
         return $this->belongsTo(User::class);
     }
 
-    public function comments()
+    public function post()
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function addLike($user)
-    {
-        $this->likes++;
-        $this->update();
-    }
-
-    /**
-     * @param \Illuminate\Http\Request $request
-     * @param $postId
-     * @return Comment|\Illuminate\Database\Eloquent\Model
-     */
-    public function addComment(\Illuminate\Http\Request $request, $postId)
-    {
-        return Comment::create(
-            ['user_id' => $request->auth->id,
-                'post_id' => $postId,
-                'content' => $request->get('content')
-            ]
-        );
+        return $this->belongsTo(Post::class);
     }
 
 }

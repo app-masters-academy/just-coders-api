@@ -10,6 +10,16 @@ $router->get('/', function () use ($router) {
     return "API Root. Use /dev/ or /prod/.";
 });
 
+$router->options(
+    '/{any:.*}',
+    [
+        'middleware' => ['cors'],
+        function () {
+            return response(['status' => 'success']);
+        }
+    ]
+);
+
 $envs = ['dev/', 'prod/'];
 
 foreach ($envs as $env) {
@@ -36,6 +46,7 @@ foreach ($envs as $env) {
         $router->delete('{id:[0-9]+}', ['uses' => 'PostController@delete']);
         $router->put('{id:[0-9]+}', ['uses' => 'PostController@update']);
         $router->post('{id:[0-9]+}/like', ['uses' => 'PostController@like']);
+        $router->post('{id:[0-9]+}/comment', ['uses' => 'PostController@createComment']);
     });
 
     //Auth

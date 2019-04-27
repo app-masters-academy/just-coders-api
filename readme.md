@@ -84,6 +84,44 @@ POST `http://api.justcoders.appmasters.io/{env}/post/{id}/like` sending an empty
 ```
 
 
+### Comments
+
+POST `http://api.justcoders.appmasters.io/{env}/post/{id}/comment` sending just `content` on body, sample:
+ 
+```json
+{
+    "content": "Good idea my friend!"
+}
+```
+
+It will return the post with the comment added:
+```json
+{
+    "data": {
+       "user_id": 2,
+       "content": "I'm happy to be here",
+       "likes": 2,
+       "id": 1,
+       "created_at": "2019-04-13 10:42:46",
+       "user": {
+           "name": "Great Admin",
+           "thumb_url": "http://www.tiago.com/eu.jpg"
+       },
+       "comments": [
+           {
+               "content": "Great project!",
+               "created_at": "2019-04-27 14:02:44"
+           },
+           {
+               "content": "Good idea my friend!",
+               "created_at": "2019-04-27 14:03:27"
+           }
+       ]
+    }
+}
+```
+
+
 # Development
 
 - [JWT authentication for Lumen 5.6](https://medium.com/tech-tajawal/jwt-authentication-for-lumen-5-6-2376fd38d454)
