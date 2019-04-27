@@ -56,7 +56,7 @@ class PostController extends Controller
      */
     public function timeline(Request $request)
     {
-        $data = Model::orderBy('id', 'desc')->with('user')->get()->toArray();
+        $data = Model::orderBy('id', 'desc')->with(['user','comments'])->get()->toArray();
 
         $data = $this->applyReturnMask($data);
 
